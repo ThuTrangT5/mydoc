@@ -1,0 +1,6 @@
+module Pods_MyDoc {
+  umbrella header "Pods-MyDoc-umbrella.h"
+
+  export *
+  module * { export * }
+}
