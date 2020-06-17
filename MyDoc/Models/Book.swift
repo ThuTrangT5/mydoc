@@ -20,25 +20,30 @@ class Book: BaseModel {
     var contributor: String?
     var author: String?
     var publisher: String?
-    var publishedDate: String?
     var price: NSNumber?
-    var amazonLink: String?
-    var rank: Int = 0
+    
+    var ranksHistory: [Rank] = []
+    var reviews: [Review] = []
     
     required init(json: JSON) {
         super.init()
         
-        let book_details = json["book_details"].arrayValue.first
-        title = book_details?["title"].string
-        desc = book_details?["description"].string
-        contributor = book_details?["contributor"].string
-        author = book_details?["author"].string
-        publisher = book_details?["publisher"].string
-        price = book_details?["price"].number
+        title = json["title"].string
+        desc = json["description"].string
+        contributor = json["contributor"].string
+        author = json["author"].string
+        publisher = json["publisher"].string
+        price = json["price"].number
         
-        publishedDate = json["published_date"].string
-        rank = json["rank"].intValue
-        amazonLink = json["amazon_product_url"].string
+        let reviewsJson = json["reviews"]
+        if reviewsJson.isEmpty == false {
+            reviews = Review.getArray(json: reviewsJson)
+        }
+        
+        let ranksJson = json["ranks_history"]
+        if ranksJson.isEmpty == false {
+            ranksHistory = Rank.getArray(json: ranksJson)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {

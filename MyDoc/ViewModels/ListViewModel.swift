@@ -9,10 +9,10 @@
 import RxSwift
 
 class ListViewModel: BaseViewModel {
-    var books: [Book] = []
-    var selectedBook: BehaviorSubject<Book?> = BehaviorSubject<Book?>(value: nil)
+    var books: BehaviorSubject<[Book]> = BehaviorSubject<[Book]>(value: [])
+    private var numberOfBook: Int = 0
+    
     var currentPage: Int = 0
-    var type: BookType = .ebook
     private var hasMoreData = true
     
     override init() {
@@ -28,7 +28,7 @@ class ListViewModel: BaseViewModel {
     func getBooks(page: Int) {
         
         self.isLoading.onNext(true)
-        APIManager.shared.getListBook(type: self.type, page: page) { [weak self](books, error) in
+        APIManager.shared.getListBook(page: page) { [weak self](books, error) in
             self?.isLoading.onNext(false)
             self?.currentPage = page
             
@@ -36,8 +36,11 @@ class ListViewModel: BaseViewModel {
                 self?.error.onNext(error)
                 
             } else if books.isEmpty == false {
-                self?.books.append(contentsOf: books)
+                var currentBooks = (try? self?.books.value()) ?? []
+                currentBooks.append(contentsOf: books)
+                self?.books.onNext(currentBooks)
                 self?.isUpdated.onNext(true)
+                self?.numberOfBook += books.count
                 
             } else {
                 self?.hasMoreData = false
@@ -54,19 +57,29 @@ class ListViewModel: BaseViewModel {
     }
     
     func reload() {
-        self.books.removeAll()
+        self.books.onNext([])
         self.hasMoreData = true
         self.currentPage = 0
+        self.numberOfBook = 0
         self.getBooks(page: 1)
     }
     
     func getBook(atIndex i: Int) -> Book? {
-        let total = self.books.count
+        guard let currentBooks = try? self.books.value() else {
+            return nil
+        }
+        
+        let total = currentBooks.count
         guard i >= 0 && i < total else {
             return nil
         }
         
-        return books[i]
+        return currentBooks[i]
     }
+    
+    func getNumberOfCurrentBook() -> Int {
+        return self.numberOfBook
+    }
+    
     
 }

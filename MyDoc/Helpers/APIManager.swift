@@ -10,7 +10,15 @@ import Alamofire
 import SwiftyJSON
 
 protocol BookAPIProtocol {
-    func getListBook(type: BookType, page: Int, callback: (([Book], Error?)->Void)?)
+    //    func getListBook(type: BookType, page: Int, callback: (([Book], Error?)->Void)?)
+    func getListBook(page: Int, callback: (([Book], Error?)->Void)?)
+}
+
+enum APIResponseStatus: String {
+    
+    case error = "ERROR"
+    case success = "OK"
+    case unknown
 }
 
 class APIManager: NSObject, BookAPIProtocol {
@@ -35,22 +43,33 @@ class APIManager: NSObject, BookAPIProtocol {
         let request = AF.request(fullURL, method: method, parameters: fullParams)
         
         request.responseJSON { (response) in
-                print("Request cURL:\(request.cURLDescription())")
-                
-                switch response.result {
-                case .success:
-                    if let value = response.value {
-                        let json = JSON(value)
-                        callback?(json, nil)
-                    } else {
-                        callback?(JSON.null, nil)
-                    }
-                    break
+            print("Request cURL:\(request.cURLDescription())")
+            
+            switch response.result {
+            case .success:
+                if let value = response.value {
+                    let json = JSON(value)
                     
-                case let .failure(error):
-                    callback?(JSON.null, error)
-                    break
+                    let status = APIResponseStatus(rawValue: json["status"].stringValue) ?? .unknown
+                    if status == .success {
+                        callback?(json["results"], nil)
+                        
+                    } else {
+                        let errorMessage = (json["errors"].arrayObject as? [String])?.joined()
+                            ?? "There is an unexpected error. Please check your request!"
+                        let error = NSError(domain: NSURLErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey : errorMessage])
+                        callback?(JSON.null, error)
+                    }
+                    
+                } else {
+                    callback?(JSON.null, nil)
                 }
+                break
+                
+            case let .failure(error):
+                callback?(JSON.null, error)
+                break
+            }
         }
     }
     
@@ -65,11 +84,12 @@ class APIManager: NSObject, BookAPIProtocol {
         return nil
     }
     
-    func getListBook(type: BookType, page: Int, callback: (([Book], Error?) -> Void)?) {
-        let url = "lists.json"
+    //    func getListBook(type: BookType, page: Int, callback: (([Book], Error?) -> Void)?) {
+    func getListBook(page: Int, callback: (([Book], Error?) -> Void)?) {
+        let url = "lists/best-sellers/history.json"
         let params: Parameters = [
-            "offset": (page - 1) * kLimitItemPerPage,
-            "list": type.rawValue
+//            "list": type.rawValue
+            "offset": (page - 1) * kLimitItemPerPage
         ]
         
         self.sendRequest(method: .get, url: url, parameters: params) { (json, error) in
@@ -77,9 +97,7 @@ class APIManager: NSObject, BookAPIProtocol {
                 callback?([], error)
                 
             } else {
-                let results = json["results"]
-                let books: [Book] = Book.getArray(json: results)
-                
+                let books: [Book] = Book.getArray(json: json)
                 callback?(books, nil)
             }
         }

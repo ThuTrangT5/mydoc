@@ -23,6 +23,8 @@ class ListViewController: BaseViewController {
         self.viewModel = ListViewModel()
         
         super.setupUI()
+        self.setupNavigationBar()
+        self.setupTableView()
         
         self.viewModel?.isUpdated
             .subscribe(onNext: { [weak self](updated) in
@@ -32,55 +34,74 @@ class ListViewController: BaseViewController {
             })
             .disposed(by: disposeBag)
         
-        self.setupTableView()
-        
     }
     
+    func setupNavigationBar() {
+        
+        self.title = "Best Sellers"
+        
+        self.navigationController?.navigationBar.layer.masksToBounds = false
+        self.navigationController?.navigationBar.layer.shadowOpacity = 0.4;
+        self.navigationController?.navigationBar.layer.shadowColor = UIColor.black.withAlphaComponent(0.3).cgColor
+        self.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0, height: 2)
+        self.navigationController?.navigationBar.layer.shadowRadius = 7
+        self.navigationController?.navigationBar.isTranslucent = false
+        
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController?.navigationBar.barTintColor = kTintColor
+        self.navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.white,
+            NSAttributedString.Key.font: UIFont.init(name: "AvenirNext-Bold", size: 24) ?? UIFont.boldSystemFont(ofSize: 24)
+        ]
+    }
+    
+    
     func setupTableView() {
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
         
         self.tableView.didHandleRefresh = { [weak self] () in
             (self?.viewModel as? ListViewModel)?.reload()
         }
-    }
-    
-    
-}
-
-extension ListViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let viewModel = self.viewModel as? ListViewModel else {
-            return 0
-        }
-        return viewModel.books.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let identifier = "cell"
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: identifier)
-        if let bookSummary = cell as? BookSumaryTableViewCell,
-            let book = (self.viewModel as? ListViewModel)?.getBook(atIndex: indexPath.row) {
-            bookSummary.bindData(book: book)
+        (self.viewModel as? ListViewModel)?.books
+            .bind(to: tableView.rx.items(cellIdentifier: "cell", cellType: BookSumaryTableViewCell.self)) { (row, model,cell) in
+                cell.bindData(book: model)
         }
+        .disposed(by: disposeBag)
         
-        return cell ?? UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: identifier)
+        self.tableView.rx
+            .willDisplayCell
+            .asObservable()
+            .subscribe(onNext: { [weak self](cell, indexPath) in
+                guard let viewModel = self?.viewModel as? ListViewModel else {
+                    return
+                }
+                let total = viewModel.getNumberOfCurrentBook()
+                if total > 0 && indexPath.row == total - 1 {
+                    viewModel.loadMore()
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        self.tableView.rx
+            .modelSelected(Book.self)
+            .subscribe(onNext: { [weak self](book) in
+                self?.performSegue(withIdentifier: "segueDetail", sender: book)
+            })
+            .disposed(by: disposeBag)
+        
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard let viewModel = self.viewModel as? ListViewModel else {
-            return
-        }
-        
-        let total = viewModel.books.count
-        if indexPath.row == total - 1 {
-            viewModel.loadMore()
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let detailVC = segue.destination as? DetailViewController,
+            let book = sender as? Book {
+            
+            let viewModel = DetailViewModel()
+            viewModel.selectedBook.onNext(book)
+            detailVC.viewModel = viewModel
+            
         }
     }
+    
 }

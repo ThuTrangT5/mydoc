@@ -38,7 +38,7 @@ class BaseViewController: UIViewController {
         activityLoader.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
         activityLoader.center = self.view.center
         activityLoader.tag = 999
-        activityLoader.tintColor = UIColor(red: 255.0/255.0, green: 157.0/255.0, blue: 4.0/255.0, alpha: 1)
+        activityLoader.tintColor = kTintColor
         self.view.addSubview(activityLoader)
         activityLoader.startAnimating()
         

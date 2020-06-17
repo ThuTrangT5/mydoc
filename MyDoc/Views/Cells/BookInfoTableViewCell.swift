@@ -1,25 +1,25 @@
 //
-//  BookSumaryTableViewCell.swift
+//  BookInfoTableViewCell.swift
 //  MyDoc
 //
-//  Created by ThuTrangT5 on 6/16/20.
+//  Created by ThuTrangT5 on 6/17/20.
 //  Copyright © 2020 ThuTrangT5. All rights reserved.
 //
 
 import UIKit
 
-class BookSumaryTableViewCell: BaseTableViewCell {
+class BookInfoTableViewCell: BaseTableViewCell {
     
     @IBOutlet weak var labelTitle: UILabel!
+    @IBOutlet weak var labelDescription: UILabel!
     @IBOutlet weak var labelAuthor: UILabel!
-    @IBOutlet weak var labelPublishDate: UILabel!
-    @IBOutlet weak var labelRank: UILabel!
+    @IBOutlet weak var labelContributor: UILabel!
+    @IBOutlet weak var labelPublisher: UILabel!
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        
-        self.selectionStyle = .gray
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -29,15 +29,11 @@ class BookSumaryTableViewCell: BaseTableViewCell {
     }
     
     func bindData(book: Book) {
-        
         labelTitle.text = book.title
+        labelDescription.text = book.desc
         labelAuthor.text = "Author: " + (book.author ?? "")
-        labelPublishDate.text = "Publisher: " + (book.publisher ?? "")
-        if let rank = book.ranksHistory.first?.rank {
-            labelRank.text = "Rank: \(rank)"
-        } else {
-            labelRank.text = nil
-        }
+        labelContributor.text = "Contributor: " + (book.contributor ?? "")
+        labelPublisher.text = "Publisher: " + (book.publisher ?? "")
     }
     
 }

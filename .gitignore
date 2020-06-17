@@ -1,5 +1,6 @@
 # ignore all logs
 *.log
+*.lock
 
 # ignore Pods folder
 

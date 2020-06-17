@@ -9,3 +9,4 @@
 import UIKit
 
 let kLimitItemPerPage = 20
+let kTintColor = UIColor(red: 255.0/255.0, green: 157.0/255.0, blue: 4.0/255.0, alpha: 1)
