@@ -12,6 +12,57 @@ class DetailViewModel: BaseViewModel {
     
     var selectedBook: BehaviorSubject<Book?> = BehaviorSubject<Book?>(value: nil)
     
+    override init() {
+        super.init()
+        
+        self.selectedBook
+            .subscribe(onNext: { [weak self](book) in
+                
+                if let _ = book,
+                    NetworkManager.shared.isOnline() == false {
+                    self?.getAllReviews()
+                    self?.getAllRanks()
+                }
+                
+            })
+            .disposed(by: disposeBag)
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func getAllReviews() {
+        guard let bookID = (try? self.selectedBook.value())?.title else {
+            return
+        }
+        
+        CoreDataManager.shared.getAllReviews(forBookID: bookID) { [weak self](reviews, error) in
+            if reviews.isEmpty == false,
+                let book = try? self?.selectedBook.value() {
+                book.reviews = reviews
+                self?.selectedBook.onNext(book)
+                self?.isUpdated.onNext(true)
+            }
+        }
+    }
+    
+    func getAllRanks() {
+        guard let bookID = (try? self.selectedBook.value())?.title else {
+            return
+        }
+        
+        CoreDataManager.shared.getAllRanks(forBookID: bookID) { [weak self](ranks, error) in
+            if ranks.isEmpty == false,
+                let book = try? self?.selectedBook.value() {
+                book.ranksHistory = ranks
+                self?.selectedBook.onNext(book)
+                self?.isUpdated.onNext(true)
+            }
+        }
+    }
+    
     func getTotalReviews() -> Int {
         guard let selected = try? self.selectedBook.value() else {
             return 0

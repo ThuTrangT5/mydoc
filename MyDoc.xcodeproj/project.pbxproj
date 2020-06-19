@@ -21,6 +21,10 @@
 		181B8D00249A05A30050F094 /* RankTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 181B8CFE249A05A30050F094 /* RankTableViewCell.swift */; };
 		181B8D02249A0A550050F094 /* DetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 181B8D01249A0A550050F094 /* DetailViewModel.swift */; };
 		181B8D03249A0A550050F094 /* DetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 181B8D01249A0A550050F094 /* DetailViewModel.swift */; };
+		183E23B1249C629A00DF7C70 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183E23B0249C629A00DF7C70 /* CoreDataManager.swift */; };
+		183E23B2249C629A00DF7C70 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183E23B0249C629A00DF7C70 /* CoreDataManager.swift */; };
+		185A21F9249CC52600B579C5 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185A21F8249CC52600B579C5 /* NetworkManager.swift */; };
+		185A21FA249CC52600B579C5 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185A21F8249CC52600B579C5 /* NetworkManager.swift */; };
 		1860ED2B249781AA00229369 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1860ED2A249781AA00229369 /* APIManager.swift */; };
 		1860ED2C249781AA00229369 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1860ED2A249781AA00229369 /* APIManager.swift */; };
 		1860ED3124978A5500229369 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1860ED3024978A5500229369 /* DetailViewController.swift */; };
@@ -74,6 +78,8 @@
 		181B8CFB249A059B0050F094 /* ReviewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewTableViewCell.swift; sourceTree = "<group>"; };
 		181B8CFE249A05A30050F094 /* RankTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankTableViewCell.swift; sourceTree = "<group>"; };
 		181B8D01249A0A550050F094 /* DetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewModel.swift; sourceTree = "<group>"; };
+		183E23B0249C629A00DF7C70 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		185A21F8249CC52600B579C5 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		1860ED2A249781AA00229369 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		1860ED3024978A5500229369 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		186BE2B42498C3B800851275 /* BaseTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableView.swift; sourceTree = "<group>"; };
@@ -126,7 +132,9 @@
 			isa = PBXGroup;
 			children = (
 				1860ED2A249781AA00229369 /* APIManager.swift */,
+				183E23B0249C629A00DF7C70 /* CoreDataManager.swift */,
 				187F8E842498AB99002BFF9C /* Constants.swift */,
+				185A21F8249CC52600B579C5 /* NetworkManager.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -383,6 +391,7 @@
 				187F8E852498AB99002BFF9C /* Constants.swift in Sources */,
 				181B8CF6249A057E0050F094 /* BookInfoTableViewCell.swift in Sources */,
 				181B8CFF249A05A30050F094 /* RankTableViewCell.swift in Sources */,
+				183E23B1249C629A00DF7C70 /* CoreDataManager.swift in Sources */,
 				18C83C3824987EF100E5ECDB /* BaseViewModel.swift in Sources */,
 				18739D5E24975FD9009A59CD /* ViewController.swift in Sources */,
 				18739D5A24975FD9009A59CD /* AppDelegate.swift in Sources */,
@@ -398,6 +407,7 @@
 				181B8CF9249A05910050F094 /* BookSectionTableViewCell.swift in Sources */,
 				181B8CF02499FD4B0050F094 /* Rank.swift in Sources */,
 				189761F12498BB7600ACC6E7 /* BaseTableViewCell.swift in Sources */,
+				185A21F9249CC52600B579C5 /* NetworkManager.swift in Sources */,
 				181B8CFC249A059B0050F094 /* ReviewTableViewCell.swift in Sources */,
 				187F8E882498ABEC002BFF9C /* BookSumaryTableViewCell.swift in Sources */,
 			);
@@ -411,6 +421,7 @@
 				181B8D00249A05A30050F094 /* RankTableViewCell.swift in Sources */,
 				1860ED2C249781AA00229369 /* APIManager.swift in Sources */,
 				181B8D03249A0A550050F094 /* DetailViewModel.swift in Sources */,
+				185A21FA249CC52600B579C5 /* NetworkManager.swift in Sources */,
 				18739D8324976534009A59CD /* Book.swift in Sources */,
 				187F8E8F2498B641002BFF9C /* BaseModel.swift in Sources */,
 				18C83C3624987E7000E5ECDB /* ListViewModel.swift in Sources */,
@@ -419,6 +430,7 @@
 				181B8CFD249A059B0050F094 /* ReviewTableViewCell.swift in Sources */,
 				181B8CF12499FD4B0050F094 /* Rank.swift in Sources */,
 				186BE2B62498C3B800851275 /* BaseTableView.swift in Sources */,
+				183E23B2249C629A00DF7C70 /* CoreDataManager.swift in Sources */,
 				18C83C3924987EF100E5ECDB /* BaseViewModel.swift in Sources */,
 				1860ED3224978A5500229369 /* DetailViewController.swift in Sources */,
 				187F8E8C2498B149002BFF9C /* BaseViewController.swift in Sources */,

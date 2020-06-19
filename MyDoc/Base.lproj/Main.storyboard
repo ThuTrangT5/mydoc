@@ -107,6 +107,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="qGU-7g-n8U">
                         <barButtonItem key="backBarButtonItem" title=" " id="2TX-MH-88b"/>
+                        <barButtonItem key="rightBarButtonItem" title="..." id="YDW-6c-8BG"/>
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="RcH-XH-Ket" id="qPS-Oc-ydA"/>

@@ -26,14 +26,28 @@ class DetailViewController: BaseViewController {
     override func setupUI() {
         super.setupUI()
         
-        (self.viewModel as? DetailViewModel)?.selectedBook
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        
+        guard let detailViewModel = self.viewModel as? DetailViewModel else {
+            return
+        }
+        
+        detailViewModel.selectedBook
             .subscribe(onNext: { [weak self](book) in
-                self?.tableView.reloadData()
+                if let _ = book {
+                    self?.tableView.reloadData()
+                }
             })
             .disposed(by: disposeBag)
         
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
+        detailViewModel.isUpdated
+            .subscribe(onNext: { [weak self](updated) in
+                if updated {
+                    self?.tableView.reloadData()
+                }
+            })
+            .disposed(by: disposeBag)
         
     }
     

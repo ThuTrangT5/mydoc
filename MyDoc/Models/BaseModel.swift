@@ -7,6 +7,7 @@
 //
 
 import SwiftyJSON
+import CoreData
 
 class BaseModel: NSObject {
     
@@ -34,4 +35,18 @@ class BaseModel: NSObject {
         return result
     }
     
+    static func getArray<T: BaseModel> (managedObjects: [NSManagedObject]) -> [T] {
+        var result: [T] = []
+        for obj in managedObjects {
+            if let model = T(managedObject: obj) {
+                result.append(model)
+            }
+        }
+        
+        return result
+    }
+    
+    required init?(managedObject: NSManagedObject) {
+        return nil
+    }
 }

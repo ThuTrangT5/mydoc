@@ -17,6 +17,18 @@ class ListViewController: BaseViewController {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
+        
+        NetworkManager.shared.networkStatusChangedHandler = { [weak self](changed) in
+            if changed {
+                (self?.viewModel as? ListViewModel)?.reload()
+                
+                self?.navigationItem.rightBarButtonItem?.title = NetworkManager.shared.isOnline()
+                    ? "Online"
+                    : "Offline"
+            }
+        }
+        
+        NetworkManager.shared.startMonitoring()
     }
     
     override func setupUI() {
