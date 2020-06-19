@@ -12,20 +12,14 @@ class DetailViewModel: BaseViewModel {
     
     var selectedBook: BehaviorSubject<Book?> = BehaviorSubject<Book?>(value: nil)
     
-    override init() {
-        super.init()
+    init(book: Book) {
         
-        self.selectedBook
-            .subscribe(onNext: { [weak self](book) in
-                
-                if let _ = book,
-                    NetworkManager.shared.isOnline() == false {
-                    self?.getAllReviews()
-                    self?.getAllRanks()
-                }
-                
-            })
-            .disposed(by: disposeBag)
+        super.init()
+        self.selectedBook.onNext(book)
+        if NetworkManager.shared.isOnline() == false {
+            self.getAllReviews()
+            self.getAllRanks()
+        }
         
     }
     

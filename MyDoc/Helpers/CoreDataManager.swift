@@ -47,13 +47,15 @@ class CoreDataManager: NSObject {
     func createOrUpdateEntity(entityName: String, keyName: String, keyValue: String) -> NSManagedObject? {
         
         let filterString = "\(keyName) = \(keyValue)"
+        
+//        print("CreateOrUpdateEntity\n\(filterString)")
+        
         let predicate = NSPredicate(format: "\(keyName) = %@", keyValue)
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
         fetchRequest.predicate = predicate
         fetchRequest.fetchLimit = 1
         fetchRequest.fetchOffset = 0
         
-        print("CreateOrUpdateEntity\n\(filterString)")
         
         do {
             let results = try context.fetch(fetchRequest)
@@ -71,7 +73,7 @@ class CoreDataManager: NSObject {
     }
     
     func createNewEntity(entityName: String) -> NSManagedObject? {
-        print("createNewEntity => \(entityName)")
+//        print("createNewEntity => \(entityName)")
         guard let entity = NSEntityDescription.entity(forEntityName: entityName, in: self.context) else {
             return nil
         }
@@ -121,8 +123,9 @@ class CoreDataManager: NSObject {
     
     func getAllReviews(forBookID bookID: String, callback: (([Review], Error?) -> Void)?) {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Review")
-        let predicate = NSPredicate(format: "bookID = \(bookID)")
+        let predicate = NSPredicate(format: "bookID BEGINSWITH %@", bookID)
         fetchRequest.predicate = predicate
+        
         do {
             let results = try context.fetch(fetchRequest)
             let reviews: [Review] = Review.getArray(managedObjects: results)
@@ -137,8 +140,9 @@ class CoreDataManager: NSObject {
     
     func getAllRanks(forBookID bookID: String, callback: (([Rank], Error?) -> Void)?) {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Rank")
-        let predicate = NSPredicate(format: "bookID = \(bookID)")
+        let predicate = NSPredicate(format: "bookID BEGINSWITH %@", bookID)
         fetchRequest.predicate = predicate
+        
         do {
             let results = try context.fetch(fetchRequest)
             let ranks: [Rank] = Rank.getArray(managedObjects: results)

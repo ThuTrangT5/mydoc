@@ -30,20 +30,35 @@ class Rank: BaseModel {
     }
     
     required init?(managedObject: NSManagedObject) {
-        fatalError("init(managedObject:) has not been implemented")
+        guard managedObject.entity.name == "Rank" else {
+            return nil
+        }
+        
+        super.init()
+        
+        self.name = managedObject.value(forKey: "name") as? String
+        self.rank = (managedObject.value(forKey: "rank") as? Int) ?? 0
+        self.publishedDate = managedObject.value(forKey: "publishedDate") as? String
+        self.bestsellersDate = managedObject.value(forKey: "bestsellersDate") as? String
     }
     
     func createOrUpdateEntity(withBookID: String? = nil) -> NSManagedObject? {
-        let object = CoreDataManager.shared.createOrUpdateEntity(entityName: "Rank", keyName: "bookID", keyValue: withBookID ?? "")
+        
+        var primaryValue = ""
+        if let bookID = withBookID {
+            primaryValue += bookID + "_"
+            primaryValue += (self.name ?? "") + "_"
+            primaryValue += (self.publishedDate ?? "") + "_"
+        }
+        
+        let object = CoreDataManager.shared.createOrUpdateEntity(entityName: "Rank", keyName: "bookID", keyValue: primaryValue)
         
         object?.setValue(name, forKeyPath: "name")
         object?.setValue(rank, forKeyPath: "rank")
         object?.setValue(publishedDate, forKeyPath: "publishedDate")
         object?.setValue(bestsellersDate, forKeyPath: "bestsellersDate")
-        
-        if let bookID = withBookID {
-            object?.setValue(bookID, forKeyPath: "bookID")
-        }
+        object?.setValue(primaryValue, forKeyPath: "bookID")
+       
         
         return object
     }

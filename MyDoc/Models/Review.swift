@@ -29,19 +29,31 @@ class Review: BaseModel {
     }
     
     required init?(managedObject: NSManagedObject) {
-        fatalError("init(managedObject:) has not been implemented")
+        guard managedObject.entity.name == "Review" else {
+            return nil
+        }
+        
+        super.init()
+        self.bookReviewLink = managedObject.value(forKey: "bookReviewLink") as? String
+        self.firstChapterLink = managedObject.value(forKey: "firstChapterLink") as? String
+        self.sundayReviewLink = managedObject.value(forKey: "sundayReviewLink") as? String
     }
     
     func createOrUpdateEntity(withBookID: String? = nil) -> NSManagedObject? {
-        let object = CoreDataManager.shared.createOrUpdateEntity(entityName: "Review", keyName: "bookID", keyValue: withBookID ?? "")
+        
+        var primaryValue = ""
+        if let bookID = withBookID {
+            primaryValue += bookID + "_"
+            primaryValue += bookReviewLink ?? ""
+        }
+        
+        let object = CoreDataManager.shared.createOrUpdateEntity(entityName: "Review", keyName: "bookID", keyValue: primaryValue)
         
         object?.setValue(bookReviewLink, forKeyPath: "bookReviewLink")
         object?.setValue(firstChapterLink, forKeyPath: "firstChapterLink")
         object?.setValue(sundayReviewLink, forKeyPath: "sundayReviewLink")
         
-        if let bookID = withBookID {
-            object?.setValue(bookID, forKeyPath: "bookID")
-        }
+        object?.setValue(primaryValue, forKeyPath: "bookID")
         
         return object
     }

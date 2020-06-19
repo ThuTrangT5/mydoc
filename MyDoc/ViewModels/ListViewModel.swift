@@ -38,29 +38,6 @@ class ListViewModel: BaseViewModel {
                 self?.getBookHandler(books: books, error: error, atPage: page)
             }
         }
-        //
-        //
-        //        //        APIManager.shared.getListBook(page: page) { [weak self](books, error) in
-        //        CoreDataManager.shared.getListBook(page: page) { [weak self](books, error) in
-        //            self?.isLoading.onNext(false)
-        //            self?.currentPage = page
-        //
-        //            if let error = error {
-        //                self?.error.onNext(error)
-        //
-        //            } else if books.isEmpty == false {
-        //                var currentBooks = (try? self?.books.value()) ?? []
-        //                currentBooks.append(contentsOf: books)
-        //                self?.books.onNext(currentBooks)
-        //                self?.isUpdated.onNext(true)
-        //                self?.numberOfBook += books.count
-        //
-        //                self?.saveToLocal(books: books)
-        //
-        //            } else {
-        //                self?.hasMoreData = false
-        //            }
-        //        }
     }
     
     private func getBookHandler(books: [Book], error: Error?, atPage page: Int) {
@@ -82,7 +59,7 @@ class ListViewModel: BaseViewModel {
                 self.saveToLocal(books: books)
             }
             
-            print("NOW there are \(numberOfBook) books")
+//            print("NOW there are \(numberOfBook) books")
             
         } else {
             self.hasMoreData = false

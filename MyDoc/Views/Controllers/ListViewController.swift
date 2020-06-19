@@ -18,17 +18,16 @@ class ListViewController: BaseViewController {
         
         // Do any additional setup after loading the view.
         
-        NetworkManager.shared.networkStatusChangedHandler = { [weak self](changed) in
-            if changed {
-                (self?.viewModel as? ListViewModel)?.reload()
-                
-                self?.navigationItem.rightBarButtonItem?.title = NetworkManager.shared.isOnline()
-                    ? "Online"
-                    : "Offline"
-            }
-        }
         
         NetworkManager.shared.startMonitoring()
+        NetworkManager.shared.networkStatusChangedHandler = { [weak self](isOnline) in
+            
+            (self?.viewModel as? ListViewModel)?.reload()
+            
+            self?.navigationItem.rightBarButtonItem?.title = isOnline
+                ? "Online"
+                : "Offline"
+        }
     }
     
     override func setupUI() {
@@ -109,8 +108,8 @@ class ListViewController: BaseViewController {
         if let detailVC = segue.destination as? DetailViewController,
             let book = sender as? Book {
             
-            let viewModel = DetailViewModel()
-            viewModel.selectedBook.onNext(book)
+            let viewModel = DetailViewModel(book: book)
+            //            viewModel.selectedBook.onNext(book)
             detailVC.viewModel = viewModel
             
         }
